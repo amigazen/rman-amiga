@@ -37,15 +37,15 @@ clean:
 	-delete $(OBJECTS) rman.lnk
 
 archive: clean
-	@-delete force RAM:rman.lha
-	lha -r a RAM:rman // rman-amiga
-	lha a RAM:rman SC:rexx/rman.ced
+	@-delete force RAM:rman-amiga.lha
+	lha -r a RAM:rman-amiga // rman-amiga
+	lha a RAM:rman-amiga SDK:C/rman
 
 # Test AmigaGuide conversion
 test-guide: rman
 	@echo "Testing AmigaGuide conversion..."
-	./rman -f AmigaGuide ctags.1 > ctags.guide
-	@echo "Generated ctags.guide"
+	./rman -f AmigaGuide rman.1 >SDK/C/rman.guide
+	@echo "Generated rman.guide"
 
 # Dependencies
 rman.o: rman.c getopt.h
