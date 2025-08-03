@@ -1,0 +1,52 @@
+# $Id: SMakefile,v 1.0 2024/12/19 00:00:00 unified Exp $
+#
+# MODIFICATION NOTICE (Artistic License compliance):
+# This SMakefile has been created for Amiga OS with SAS/C compiler support.
+# It enables building rman with AmigaGuide output format capabilities.
+#
+# Modifications made by: AmigaZen project
+# Date: July 2025
+# Purpose: Provide SAS/C build system for Amiga OS with AmigaGuide support
+#
+# SMakefile for rman on Amiga with SAS/C
+# Unified build supporting AmigaGuide output format
+# Based on rman-aguide and rman-3.2 versions
+
+# Compiler flags for SAS/C
+CFLAGS= def AMIGA opt parm r nover
+CFLAGS= $(CFLAGS) def VOLLIST="1:2:3:4:5:6:7:8:9:o:l:n:p"
+CFLAGS= $(CFLAGS) def POLYGLOTMANVERSION="3.2"
+CFLAGS= $(CFLAGS) def MANTITLEPRINTF="%s(%s) manual page"
+CFLAGS= $(CFLAGS) def MANREFPRINTF="%s.%s"
+CFLAGS= $(CFLAGS) DATA=far CODE=far NOICONS idir=include:
+
+OBJEXT = o
+
+OBJECTS = \
+	rman.$(OBJEXT) \
+	getopt.$(OBJEXT)
+
+rman: $(OBJECTS)
+	sc link to $@ $(OBJECTS) math s
+	@copy $@ SDK:C/$@
+
+.c.o:
+	$(CC) $(CFLAGS) to $*.o $*.c
+
+clean:
+	-delete $(OBJECTS) rman.lnk
+
+archive: clean
+	@-delete force RAM:rman.lha
+	lha -r a RAM:rman // rman-amiga
+	lha a RAM:rman SC:rexx/rman.ced
+
+# Test AmigaGuide conversion
+test-guide: rman
+	@echo "Testing AmigaGuide conversion..."
+	./rman -f AmigaGuide ctags.1 > ctags.guide
+	@echo "Generated ctags.guide"
+
+# Dependencies
+rman.o: rman.c getopt.h
+getopt.o: getopt.c getopt.h 
