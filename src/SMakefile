@@ -28,7 +28,7 @@ OBJECTS = \
 
 rman: $(OBJECTS)
 	sc link to $@ $(OBJECTS) math s
-	@copy $@ SDK:C/$@
+	@copy $@ /SDK/C/$@
 
 .c.o:
 	$(CC) $(CFLAGS) to $*.o $*.c
@@ -39,7 +39,7 @@ clean:
 archive: clean
 	@-delete force RAM:rman-amiga.lha
 	lha -r a RAM:rman-amiga // rman-amiga
-	lha a RAM:rman-amiga SDK:C/rman
+	lha a RAM:rman-amiga /SDK/C/rman
 
 # Test AmigaGuide conversion
 test-guide: rman
